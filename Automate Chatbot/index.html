@@ -1,21 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Friendly Chatbox 🤖</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Chatbot</title>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-  <div class="chat-container">
-    <div class="chat-header">Friendly Chat 🤗</div>
-    <div class="chat-messages" id="chatMessages"></div>
-    <div class="chat-input">
-      <input type="text" id="userInput" placeholder="Type a message..." />
-      <button onclick="sendMessage()">Send</button>
+
+  <div class="chat-wrapper">
+    <div class="chat-header">
+      <img src="https://cdn-icons-png.flaticon.com/512/4712/4712035.png" alt="bot" class="bot-icon">
+      <h2>Smart Chatbot</h2>
+      <span class="status"> Online</span>
+    </div>
+
+    <div id="messages" class="chat-box"></div>
+
+    <div class="input-area">
+      <input type="text" id="inp" placeholder="Type your message..." onkeypress="send(event)">
     </div>
   </div>
 
-  <script src="app.js"></script>
+  <script src="script.js"></script>
 </body>
+
 </html>
