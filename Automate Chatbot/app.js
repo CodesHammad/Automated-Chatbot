@@ -1,73 +1,84 @@
-// var chatMessages = document.getElementById("chatMessages");
-var userInput = document.getElementById("userInput");
+var count = 0;
 
-function sendMessage() {
-  var message = userInput.value.trim();
-  if (message === "") return;
+var greetings = [
+    "hello", "hi", "hey", "hiya", "yo", "sup", "what's up", "howdy", "good day",
+    "good morning", "good afternoon", "good evening", "good night",
+    "greetings", "pleased to meet you", "nice to meet you", "how do you do",
+    "hey there", "hi there", "hello there", "yo buddy", "what’s going on",
+    "long time no see", "how have you been", "good to see you",
+    "wassup", "sup bro", "yo man", "what up", "how’s it going", "how’s everything",
+    "how are you", "how are ya", "how are things",
+    "salam", "assalamualaikum", "wa alaikum salam", "namaste", "hola",
+    "bonjour", "ciao", "konnichiwa", "annyeong", "ni hao", "shalom",
+    "hey hey", "hi hi", "yo yo", "hey dude", "hey mate", "hi friend", "hey buddy"
+];
 
-  addMessage(message, "user");
-  userInput.value = "";
+var orderStatus = [
+    "where is my order", "what is the status of my order", "track my order",
+    "can i track my order", "has my order been shipped", "when will my order arrive",
+    "is my order on the way", "where can i see my order details", "order tracking",
+    "order status"
+];
 
-  // show typing animation
-  showTyping();
-
-  setTimeout(function() {
-    hideTyping();
-    var reply = getBotReply(message);
-    addMessage(reply, "bot");
-  }, 1200);
+var keywords = [];
+for (var i = 0; i < orderStatus.length; i++) {
+    var words = orderStatus[i].split(" ");
+    for (var j = 0; j < words.length; j++) {
+        keywords.push(words[j]);
+    }
 }
 
-function showTyping() {
-  var typingDiv = document.createElement("div");
-  typingDiv.id = "typing";
-  typingDiv.className = "message bot";
-  typingDiv.innerHTML = "Typing<span class='typing'>...</span>";
-  chatMessages.appendChild(typingDiv);
-  chatMessages.scrollTop = chatMessages.scrollHeight;
+var ignoreWords = ["is", "my", "the", "of", "can", "i", "on", "has"];
+var filtered = [];
+for (var k = 0; k < keywords.length; k++) {
+    if (ignoreWords.indexOf(keywords[k]) === -1) {
+        filtered.push(keywords[k]);
+    }
 }
+keywords = filtered;
 
-function hideTyping() {
-  var typingDiv = document.getElementById("typing");
-  if (typingDiv) typingDiv.remove();
+function send(event) {
+    if (event.keyCode === 13) {
+        count++;
+        var a = document.getElementById("inp").value;
+        a = a.trim();
+
+        if (a === "") return;
+
+        var aint = parseInt(a);
+        var chatBox = document.getElementById("messages");
+        document.getElementById("inp").value = "";
+
+        var uniqueId = "hello" + count;
+
+        chatBox.innerHTML += "<div id='right'>" + a + "</div>";
+        chatBox.innerHTML += "<div class='left' id='" + uniqueId + "'>Typing...</div>";
+
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        if (greetings.indexOf(a.toLowerCase()) !== -1) {
+            setTimeout(function () {
+                document.getElementById(uniqueId).style.backgroundColor = "blue";
+                document.getElementById(uniqueId).innerText = "Hello, How can I help you?";
+            }, 1500);
+        }
+        else if (keywords.indexOf(a.toLowerCase()) !== -1 || orderStatus.indexOf(a.toLowerCase()) !== -1) {
+            setTimeout(function () {
+                document.getElementById(uniqueId).style.backgroundColor = "blue";
+                document.getElementById(uniqueId).innerText = "Can you please provide me your Order ID so I can give more information?";
+            }, 1500);
+        }
+        else if (a == aint) {
+            setTimeout(function () {
+                document.getElementById(uniqueId).style.backgroundColor = "blue";
+                document.getElementById(uniqueId).innerText = "Here are your order details for ID " + aint;
+            }, 1500);
+        }
+        else {
+            setTimeout(function () {
+                document.getElementById(uniqueId).style.backgroundColor = "blue";
+                document.getElementById(uniqueId).innerText = "It looks like there's a typing mistake. Can you please try again?";
+            }, 1500);
+        }
+    }
 }
-
-function addMessage(text, sender) {
-  var msgDiv = document.createElement("div");
-  msgDiv.classList.add("message", sender);
-  msgDiv.innerText = text;
-  chatMessages.appendChild(msgDiv);
-  chatMessages.scrollTop = chatMessages.scrollHeight;
-}
-
-function getBotReply(input) {
-  input = input.toLowerCase();
-  var response;
-
-  if (input.includes("hello") || input.includes("hi")) {
-    response = "Hey there! 👋 How are you doing today?";
-  } else if (input.includes("how are you")) {
-    response = "I'm great, thanks for asking! 😊 How about you?";
-  } else if (input.includes("your name")) {
-    response = "I'm Luna, your friendly chat buddy 💫";
-  } else if (input.includes("fine") || input.includes("good")) {
-    response = "That’s awesome to hear! 🌟";
-  } else if (input.includes("what can you do")) {
-    response = "I can chat with you, make you smile 😄 and keep you company!";
-  } else if (input.includes("bye")) {
-    response = "Bye bye 👋 Take care of yourself!";
-  } else if (input.includes("time")) {
-    var now = new Date();
-    response = "The current time is " + now.toLocaleTimeString();
-  } else if (input.includes("what is my name")) {
-    response = "Your name is Hammad 😎";
-  } else {
-    response = "Hmm, interesting 🤔 Tell me more about that!";
-  }
-
-  return response;
-}
-
-userInput.addEventListener("keypress", function(e) {
-  if (e.key === "Enter") sendMessage();
-});
